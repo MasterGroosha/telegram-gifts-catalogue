@@ -22,21 +22,22 @@ def prepare_dirs():
     for output_dir in (BASE_OUTPUT_DIR, IMAGES_DIR):
         if not output_dir.exists():
             output_dir.mkdir(parents=True, exist_ok=True)
-    for filename in ("index.html", "style.css"):
+    for filename in ("index.html", "style.css", "ru.index.html", "uk.index.html", "uz.index.html"):
         shutil.copyfile(src=f"web/{filename}", dst=BASE_OUTPUT_DIR.joinpath(f"{filename}"))
 
 def update_date():
     """
     Update the date in the HTML file to the current date and time.
     """
-    html_file = BASE_OUTPUT_DIR.joinpath("index.html")
-    current_date = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    with open(html_file, "r") as f:
-        content = f.read()
+    for filename in ("index.html", "ru.index.html", "uk.index.html", "uz.index.html"):
+        html_file = BASE_OUTPUT_DIR.joinpath(filename)
+        current_date = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        with open(html_file, "r") as f:
+            content = f.read()
 
-    updated_content = content.replace("%DATE%", current_date)
-    with open(html_file, "w") as f:
-        f.write(updated_content)
+        updated_content = content.replace("%DATE%", current_date)
+        with open(html_file, "w") as f:
+            f.write(updated_content)
 
 async def download_gifts(bot: Bot):
     """

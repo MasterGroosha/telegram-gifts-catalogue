@@ -2,7 +2,7 @@ name: Generate and Deploy
 
 on:
   schedule:
-    - cron: '25 */4 * * *'  # 25th minute of every 4th hour
+    - cron: '25 */4 * * *'
   workflow_dispatch:
 
 jobs:
@@ -57,4 +57,4 @@ jobs:
       - name: TruffleHog
         uses: trufflesecurity/trufflehog@v3.8.0
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
