@@ -23,7 +23,7 @@
             if (lang === 'en') {
                 window.location.href = 'index.html';
             } else {
-                window.location.href = lang + '.index.html';
+                window.location.href = `${lang}.index.html`;
             }
         }
     </script>
@@ -44,25 +44,50 @@
 <div class="gallery" id="gallery"></div>
 
 <script>
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-            const gallery = document.getElementById('gallery');
-            data.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'item';
-                div.innerHTML = `
-                    <tgs-player autoplay loop mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs"></tgs-player>
-                    <div class="info"><pre>${item.id}</pre></div>
-                    <div class="info">Price: ⭐${item.price}</div>
-                    ${item.upgrade_price !== null ? `<div class="info">Upgrade Price: ⭐${item.upgrade_price}</div>` : ''}
-                    ${item.remaining_count !== null ? `<div class="info">Remaining: ${item.remaining_count}</div>` : ''}
-                    ${item.total_count !== null ? `<div class="info">Total: ${item.total_count}</div>` : ''}
-                `;
-                gallery.appendChild(div);
-            });
-        })
-        .catch(error => console.error('Error loading data:', error));
+    const data_active_gift = {};
+
+    function load_gift_start() {
+        fetch('data.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const gallery = document.getElementById('gallery');
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.innerHTML = `
+                        <tgs-player autoplay loop mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs"></tgs-player>
+                        <div class="info"><pre>${item.id}</pre></div>
+                        <div class="info">Price: ⭐${item.price}</div>
+                        ${item.upgrade_price !== null ? `<div class="info">Upgrade Price: ⭐${item.upgrade_price}</div>` : ''}
+                        ${item.remaining_count !== null ? `<div class="info">Remaining: ${item.remaining_count}</div>` : ''}
+                        ${item.total_count !== null ? `<div class="info">Total: ${item.total_count}</div>` : ''}
+                    `;
+                    gallery.appendChild(div);
+                });
+            })
+            .catch(error => console.error('Error loading data:', error));
+    }
+
+    function ClickGift(element) {
+        if (element.id in data_active_gift) { return; }
+        data_active_gift[element.id] = true;
+
+        element.stop();
+        element.play();
+
+        element.addEventListener('complete', (event) => {
+            delete data_active_gift[event.target.id];
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        load_gift_start();
+    });
 </script>
 </body>
 </html>
