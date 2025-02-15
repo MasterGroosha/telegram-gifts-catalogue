@@ -49,7 +49,7 @@
                     const div = document.createElement('div');
                     div.className = 'item';
                     div.innerHTML = `
-                        <tgs-player id="gift-${item.id}" mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs"></tgs-player>
+                        <tgs-player mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs" onclick="ClickGift(this);" onmouseover="ClickGift(this);" id="${item.id}"></tgs-player>
                         <div class="info"><pre>${item.id}</pre></div>
                         <div class="info">Narxi: ⭐${item.price}</div>
                         ${item.upgrade_price !== null ? `<div class="info">Yangilash narxi: ⭐${item.upgrade_price}</div>` : ''}
@@ -57,29 +57,34 @@
                         ${item.total_count !== null ? `<div class="info">Jami: ${item.total_count}</div>` : ''}
                     `;
                     gallery.appendChild(div);
+                });
 
-                    const player = div.querySelector('tgs-player');
-                    player.addEventListener('mouseenter', () => player.play());
-                    player.addEventListener('mouseleave', () => player.stop());
-                    player.addEventListener('click', () => {
-                        if (player.isPlaying) {
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        const player = entry.target;
+                        if (!entry.isIntersecting) {
                             player.stop();
-                        } else {
-                            player.play();
-                        }
-                    });
-
-                    // For mobile devices
-                    player.addEventListener('touchstart', () => {
-                        if (player.isPlaying) {
-                            player.stop();
-                        } else {
-                            player.play();
                         }
                     });
                 });
+
+                document.querySelectorAll('tgs-player').forEach(player => {
+                    observer.observe(player);
+                });
             })
             .catch(error => console.error('Ma\'lumotlarni yuklashda xatolik:', error));
+    }
+
+    function ClickGift(element) {
+        if (element.id in data_active_gift) { return; }
+        data_active_gift[element.id] = true;
+
+        element.stop();
+        element.play();
+
+        element.addEventListener('complete', (event) => {
+            delete data_active_gift[event.target.id];
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
