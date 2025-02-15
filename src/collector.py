@@ -52,6 +52,7 @@ async def download_gifts(bot: Bot):
         logger.error(f"Failed to fetch available gifts: {e}")
         return
 
+    # Process available gifts
     for index, gift in enumerate(available_gifts.gifts):
         data.append({
             "id": gift.id,
@@ -61,11 +62,12 @@ async def download_gifts(bot: Bot):
             "total_count": gift.total_count,
         })
         file_name = f"{gift.id}.tgs"
+        destination_dir = IMAGES_DIR
         try:
-            await bot.download(file=gift.sticker.file_id, destination=IMAGES_DIR.joinpath(file_name).absolute())
-            logger.info(f"Downloaded {index + 1}/{len(available_gifts.gifts)}")
+            await bot.download(file=gift.sticker.file_id, destination=destination_dir.joinpath(file_name).absolute())
+            logger.info(f"Downloaded available gift {index + 1}/{len(available_gifts.gifts)}")
         except Exception as e:
-            logger.error(f"Failed to download gift {gift.id}: {e}")
+            logger.error(f"Failed to download available gift {gift.id}: {e}")
         await asyncio.sleep(1)
 
     with open(BASE_OUTPUT_DIR.joinpath("data.json"), "w") as f:

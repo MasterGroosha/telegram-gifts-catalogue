@@ -1,23 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Gifts</title>
+    <title>Telegram Sovg'alari</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/tgs-player.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const userLang = localStorage.getItem('userLang') || navigator.language || navigator.userLanguage;
-            if (userLang.startsWith('ru')) {
-                window.location.href = 'ru.index.html';
-            } else if (userLang.startsWith('uk')) {
-                window.location.href = 'uk.index.html';
-            } else if (userLang.startsWith('uz')) {
-                window.location.href = 'uz.index.html';
-            }
-        });
-
         function setLanguage(lang) {
             localStorage.setItem('userLang', lang);
             if (lang === 'en') {
@@ -29,7 +18,7 @@
     </script>
 </head>
 <body>
-<header>Telegram Gifts</header>
+<header>Telegram Sovg'alari</header>
 <div class="language-switcher">
     <button onclick="setLanguage('en')">EN</button>
     <button onclick="setLanguage('ru')">RU</button>
@@ -37,10 +26,10 @@
     <button onclick="setLanguage('uz')">UZ</button>
 </div>
 <div class="headersub">
-    This is a list of gifts, which Telegram bots can send to users.
-    The number below each image is gift ID.
+    Bu Telegram botlari foydalanuvchilarga yuborishi mumkin bo'lgan sovg'alar ro'yxati.
+    Har bir rasm ostidagi raqam sovg'a ID'si.
 </div>
-<div class="headersub">Last updated: %DATE%</div>
+<div class="headersub">Oxirgi yangilanish: %DATE%</div>
 <div class="gallery" id="gallery"></div>
 
 <script>
@@ -54,15 +43,15 @@
                 div.innerHTML = `
                     <tgs-player autoplay loop mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs"></tgs-player>
                     <div class="info"><pre>${item.id}</pre></div>
-                    <div class="info">Price: ⭐${item.price}</div>
-                    ${item.upgrade_price !== null ? `<div class="info">Upgrade Price: ⭐${item.upgrade_price}</div>` : ''}
-                    ${item.remaining_count !== null ? `<div class="info">Remaining: ${item.remaining_count}</div>` : ''}
-                    ${item.total_count !== null ? `<div class="info">Total: ${item.total_count}</div>` : ''}
+                    <div class="info">Narxi: ⭐${item.price}</div>
+                    ${item.upgrade_price !== null ? `<div class="info">Yangilash narxi: ⭐${item.upgrade_price}</div>` : ''}
+                    ${item.remaining_count !== null ? `<div class="info">Qoldi: ${item.remaining_count}</div>` : ''}
+                    ${item.total_count !== null ? `<div class="info">Jami: ${item.total_count}</div>` : ''}
                 `;
                 gallery.appendChild(div);
             });
         })
-        .catch(error => console.error('Error loading data:', error));
+        .catch(error => console.error('Ma\'lumotlarni yuklashda xatolik:', error));
 </script>
 </body>
 </html>
