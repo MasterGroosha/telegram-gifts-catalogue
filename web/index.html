@@ -60,7 +60,7 @@
                     const div = document.createElement('div');
                     div.className = 'item';
                     div.innerHTML = `
-                        <tgs-player autoplay loop mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs"></tgs-player>
+                        <tgs-player id="gift-${item.id}" mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs"></tgs-player>
                         <div class="info"><pre>${item.id}</pre></div>
                         <div class="info">Price: ⭐${item.price}</div>
                         ${item.upgrade_price !== null ? `<div class="info">Upgrade Price: ⭐${item.upgrade_price}</div>` : ''}
@@ -68,21 +68,29 @@
                         ${item.total_count !== null ? `<div class="info">Total: ${item.total_count}</div>` : ''}
                     `;
                     gallery.appendChild(div);
+
+                    const player = div.querySelector('tgs-player');
+                    player.addEventListener('mouseenter', () => player.play());
+                    player.addEventListener('mouseleave', () => player.stop());
+                    player.addEventListener('click', () => {
+                        if (player.isPlaying) {
+                            player.stop();
+                        } else {
+                            player.play();
+                        }
+                    });
+
+                    // For mobile devices
+                    player.addEventListener('touchstart', () => {
+                        if (player.isPlaying) {
+                            player.stop();
+                        } else {
+                            player.play();
+                        }
+                    });
                 });
             })
             .catch(error => console.error('Error loading data:', error));
-    }
-
-    function ClickGift(element) {
-        if (element.id in data_active_gift) { return; }
-        data_active_gift[element.id] = true;
-
-        element.stop();
-        element.play();
-
-        element.addEventListener('complete', (event) => {
-            delete data_active_gift[event.target.id];
-        });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
