@@ -75,6 +75,7 @@
                         const player = entry.target;
                         if (!entry.isIntersecting) {
                             player.stop();
+                            delete data_active_gift[event.target.id];
                         }
                     });
                 });
