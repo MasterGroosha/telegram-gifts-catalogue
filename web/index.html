@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram Gifts</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/tgs-player.js"></script>
 </head>
 <body>
 <header>Telegram Gifts</header>
@@ -24,7 +25,7 @@
                 const div = document.createElement('div');
                 div.className = 'item';
                 div.innerHTML = `
-                        <img src="images/${item.id}.jpg" alt="Image ${item.id}">
+                        <tgs-player autoplay loop mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs"></tgs-player>
                         <div class="info"><pre>${item.id}</pre></div>
                         <div class="info">Price: ⭐${item.price}</div>
                         ${item.upgrade_price !== null ? `<div class="info">Upgrade Price: ⭐${item.upgrade_price}</div>` : ''}

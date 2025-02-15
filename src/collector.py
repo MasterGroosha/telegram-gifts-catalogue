@@ -8,7 +8,7 @@ from pathlib import Path
 from aiogram import Bot
 from aiogram.types import Gift, Gifts
 
-BASE_OUTPUT_DIR = Path("/tmp/gifts")
+BASE_OUTPUT_DIR = Path("/Users/groosha/PycharmProjects/telegram-gifts-catalogue/website2")
 IMAGES_DIR = BASE_OUTPUT_DIR.joinpath("images")
 
 def prepare_dirs():
@@ -44,9 +44,9 @@ async def download_gifts(
             "remaining_count": gift.remaining_count,
             "total_count": gift.total_count,
         })
-        file_name = f"{gift.id}.jpg"
+        file_name = f"{gift.id}.tgs"
         await bot.download(
-            file=gift.sticker.thumbnail.file_id,
+            file=gift.sticker.file_id,
             destination=IMAGES_DIR.joinpath(file_name).absolute(),
         )
         print(f"Downloaded {index + 1}/{len(available_gifts.gifts)}")
