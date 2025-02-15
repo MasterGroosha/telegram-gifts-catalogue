@@ -1,9 +1,13 @@
 [project]
 name = "telegram-gifts-catalogue"
 version = "0.1.0"
-description = "Add your description here"
+description = "A script to download all available gifts in Telegram using aiogram."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aiogram>=3.17.0",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
