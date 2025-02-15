@@ -7,7 +7,3 @@ requires-python = ">=3.12"
 dependencies = [
     "aiogram>=3.17.0",
 ]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
