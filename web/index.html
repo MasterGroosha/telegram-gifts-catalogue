@@ -79,8 +79,21 @@
                     `;
                     gallery.appendChild(div);
                     
+                    let touchStartY = 0;
+                    let isTouchMove = false;
+                    
                     const player = div.querySelector('tgs-player');
                     
+                    const handleClick = () => {
+                        if (data_active_gift.has(player.id)) {
+                            player.stop();
+                            data_active_gift.delete(player.id);
+                        } else if (isElementVisible(player)) {
+                            player.play();
+                            data_active_gift.add(player.id);
+                        }
+                    };
+
                     if (!('ontouchstart' in window)) {
                         player.addEventListener('mouseenter', () => {
                             if (isElementVisible(player)) {
@@ -93,24 +106,27 @@
                                 player.stop();
                             }
                         });
+                    } else {
+                        player.addEventListener('touchstart', (e) => {
+                            touchStartY = e.touches[0].clientY;
+                            isTouchMove = false;
+                        }, { passive: true });
+
+                        player.addEventListener('touchmove', (e) => {
+                            const touchMoveY = e.touches[0].clientY;
+                            if (Math.abs(touchMoveY - touchStartY) > 10) {
+                                isTouchMove = true;
+                            }
+                        }, { passive: true });
+
+                        player.addEventListener('touchend', () => {
+                            if (!isTouchMove && isElementVisible(player)) {
+                                handleClick();
+                            }
+                        });
                     }
                     
-                    const handleClick = () => {
-                        if (data_active_gift.has(player.id)) {
-                            player.stop();
-                            data_active_gift.delete(player.id);
-                        } else if (isElementVisible(player)) {
-                            player.play();
-                            data_active_gift.add(player.id);
-                        }
-                    };
-                    
                     player.addEventListener('click', handleClick);
-                    player.addEventListener('touchstart', (e) => {
-                        e.preventDefault();
-                        handleClick();
-                    });
-                    
                     player.addEventListener('complete', () => {
                         data_active_gift.delete(player.id);
                     });
