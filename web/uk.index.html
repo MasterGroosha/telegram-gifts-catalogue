@@ -98,21 +98,36 @@
                     } else {
                         let touchStartTime = 0;
                         let isTouchMove = false;
-                    
+                        let touchStartY = 0;
+                        let timeoutId = null;
+
                         player.addEventListener('touchstart', (e) => {
                             touchStartTime = Date.now();
                             isTouchMove = false;
+                            touchStartY = e.touches[0].clientY;
+
+                            timeoutId = setTimeout(() => {
+                                if (!isTouchMove && isElementVisible(player)) {
+                                    handleClick();
+                                }
+                            }, 200);
                         }, { passive: true });
-                    
-                        player.addEventListener('touchmove', () => {
-                            isTouchMove = true;
-                        }, { passive: true });
-                    
-                        player.addEventListener('touchend', () => {
-                            if (!isTouchMove && isElementVisible(player)) {
-                                handleClick();
+
+                        player.addEventListener('touchmove', (e) => {
+                            const touchEndY = e.touches[0].clientY;
+                            const deltaY = Math.abs(touchEndY - touchStartY);
+                            if (deltaY > 25) {
+                                isTouchMove = true;
+                                if (timeoutId) {
+                                    clearTimeout(timeoutId);
+                                    timeoutId = null;
+                                }
+                                if (data_active_gift.has(player.id)) {
+                                    player.stop();
+                                    data_active_gift.delete(player.id);
+                                }
                             }
-                        });
+                        }, { passive: true });
                     };
 
                     player.addEventListener('click', handleClick);
