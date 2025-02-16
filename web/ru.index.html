@@ -33,7 +33,17 @@
 <div class="gallery" id="gallery"></div>
 
 <script>
-    const data_active_gift = {};
+    const data_active_gift = new Set();
+    
+    function isElementVisible(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
 
     function load_gift_start() {
         fetch('data.json')
@@ -49,7 +59,7 @@
                     const div = document.createElement('div');
                     div.className = 'item';
                     div.innerHTML = `
-                        <tgs-player mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs" onclick="ClickGift(this);" onmouseover="ClickGift(this);" id="${item.id}"></tgs-player>
+                        <tgs-player mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs" id="${item.id}"></tgs-player>
                         <div class="info"><pre>${item.id}</pre></div>
                         <div class="info">Цена: ⭐${item.price}</div>
                         ${item.upgrade_price !== null ? `<div class="info">Цена обновления: ⭐${item.upgrade_price}</div>` : ''}
@@ -57,14 +67,55 @@
                         ${item.total_count !== null ? `<div class="info">Всего: ${item.total_count}</div>` : ''}
                     `;
                     gallery.appendChild(div);
+                    
+                    const player = div.querySelector('tgs-player');
+                    
+                    if (!('ontouchstart' in window)) {
+                        player.addEventListener('mouseenter', () => {
+                            if (isElementVisible(player)) {
+                                player.play();
+                            }
+                        });
+                        
+                        player.addEventListener('mouseleave', () => {
+                            if (!data_active_gift.has(player.id)) {
+                                player.stop();
+                            }
+                        });
+                    }
+                    
+                    const handleClick = () => {
+                        if (data_active_gift.has(player.id)) {
+                            player.stop();
+                            data_active_gift.delete(player.id);
+                        } else if (isElementVisible(player)) {
+                            player.play();
+                            data_active_gift.add(player.id);
+                        }
+                    };
+                    
+                    player.addEventListener('click', handleClick);
+                    
+                    if ('ontouchstart' in window) {
+                        player.addEventListener('touchstart', (e) => {
+                            e.preventDefault();
+                            handleClick();
+                        });
+                    }
+                    
+                    player.addEventListener('complete', () => {
+                        data_active_gift.delete(player.id);
+                    });
                 });
 
-                const observer = new IntersectionObserver(entries => {
+                const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         const player = entry.target;
                         if (!entry.isIntersecting) {
                             player.stop();
-                            delete data_active_gift[event.target.id];
+                            data_active_gift.delete(player.id);
+                        } else if (data_active_gift.has(player.id)) {
+                            player.play();
                         }
                     });
                 });
@@ -74,18 +125,6 @@
                 });
             })
             .catch(error => console.error('Ошибка загрузки данных:', error));
-    }
-
-    function ClickGift(element) {
-        if (element.id in data_active_gift) { return; }
-        data_active_gift[element.id] = true;
-
-        element.stop();
-        element.play();
-
-        element.addEventListener('complete', (event) => {
-            delete data_active_gift[event.target.id];
-        });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
