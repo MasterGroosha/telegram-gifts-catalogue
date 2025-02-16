@@ -9,7 +9,7 @@ from aiogram import Bot
 from aiogram.types import Gift, Gifts
 import logging
 
-BASE_OUTPUT_DIR = Path("/tmp/gifts")
+BASE_OUTPUT_DIR = Path(getenv("OUTPUT_DIR", "/tmp/gifts"))
 IMAGES_DIR = BASE_OUTPUT_DIR.joinpath("images")
 
 logging.basicConfig(level=logging.INFO)

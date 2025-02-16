@@ -76,7 +76,13 @@ telegram-gifts-catalogue/
     pip install -r requirements.txt
     ```
 
-4. Barcha mavjud sovg'alarni yuklab olish uchun skriptni ishga tushirish:
+4. Asosiy katalogda `.env` faylini yarating va Telegram bot tokeningizni qo'shing:
+    ```sh
+    BOT_TOKEN=your_bot_token_here
+    OUTPUT_DIR=/path/to/output/directory
+    ```
+
+5. Barcha mavjud sovg'alarni yuklab olish uchun skriptni ishga tushirish:
     ```sh
     python src/collector.py
     ```

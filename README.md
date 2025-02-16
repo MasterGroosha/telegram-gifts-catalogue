@@ -76,7 +76,13 @@ telegram-gifts-catalogue/
     pip install -r requirements.txt
     ```
 
-4. Run the script to download all available gifts:
+4. Create `.env` file in the root directory and add your configuration:
+    ```sh
+    BOT_TOKEN=your_bot_token_here
+    OUTPUT_DIR=/path/to/output/directory
+    ```
+
+5. Run the script to download all available gifts:
     ```sh
     python src/collector.py
     ```

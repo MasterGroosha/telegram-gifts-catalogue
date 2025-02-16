@@ -76,7 +76,14 @@ telegram-gifts-catalogue/
     pip install -r requirements.txt
     ```
 
-4. Запустите скрипт для загрузки всех доступных подарков:
+4. Создайте файл `.env` в корневой директории и добавьте токен вашего Telegram бота:
+    ```sh
+    BOT_TOKEN=your_bot_token_here
+    OUTPUT_DIR=/path/to/output/directory
+    ```
+
+
+5. Запустите скрипт для загрузки всех доступных подарков:
     ```sh
     python src/collector.py
     ```
