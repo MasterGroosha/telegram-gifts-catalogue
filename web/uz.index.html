@@ -113,7 +113,7 @@
                             const touchMoveY = e.touches[0].clientY;
                             const deltaX = Math.abs(touchMoveX - touchStartX);
                             const deltaY = Math.abs(touchMoveY - touchStartY);
-                            if (deltaX > 10 || deltaY > 10) {
+                            if (deltaX > 50 || deltaY > 50) {
                                 isTouchMove = true;
                             }
                         }, { passive: true });
@@ -121,7 +121,7 @@
                         player.addEventListener('touchend', (e) => {
                             const touchEndTime = Date.now();
                             const touchDuration = touchEndTime - touchStartTime;
-                            if (!isTouchMove && touchDuration < 700 && isElementVisible(player)) {
+                            if (!isTouchMove && touchDuration < 950 && isElementVisible(player)) {
                                 handleClick();
                             }
                         });
