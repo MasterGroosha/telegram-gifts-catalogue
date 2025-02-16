@@ -8,7 +8,7 @@ from pathlib import Path
 from aiogram import Bot
 from aiogram.types import Gift, Gifts
 
-BASE_OUTPUT_DIR = Path("/tmp/gifts")
+BASE_OUTPUT_DIR = Path(getenv("OUTPUT_DIR", "/tmp/gifts"))
 IMAGES_DIR = BASE_OUTPUT_DIR.joinpath("images")
 
 def prepare_dirs():
