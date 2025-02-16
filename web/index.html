@@ -120,8 +120,7 @@
                         }, { passive: true });
                     
                         player.addEventListener('touchend', () => {
-                            const touchDuration = Date.now() - touchStartTime;
-                            if (!isTouchMove && touchDuration < 550 && isElementVisible(player)) {
+                            if (!isTouchMove && isElementVisible(player)) {
                                 handleClick();
                             }
                         });
