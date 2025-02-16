@@ -45,6 +45,28 @@
         );
     }
 
+    function handleGiftClick(player) {
+        if (data_active_gift.has(player.id)) {
+            player.stop();
+            data_active_gift.delete(player.id);
+        } else if (isElementVisible(player)) {
+            player.play();
+            data_active_gift.add(player.id);
+        }
+    }
+
+    function handleGiftHover(player) {
+        if (isElementVisible(player) && !('ontouchstart' in window)) {
+            player.play();
+        }
+    }
+
+    function handleGiftLeave(player) {
+        if (!data_active_gift.has(player.id)) {
+            player.stop();
+        }
+    }
+
     function load_gift_start() {
         fetch('data.json')
             .then(response => {
@@ -59,7 +81,15 @@
                     const div = document.createElement('div');
                     div.className = 'item';
                     div.innerHTML = `
-                        <tgs-player mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs" onclick="ClickGift(this);" onmouseover="ClickGift(this);" id="${item.id}"></tgs-player>
+                        <tgs-player 
+                            mode="normal" 
+                            style="width: 180px; height: 180px" 
+                            src="images/${item.id}.tgs" 
+                            id="${item.id}"
+                            onclick="handleGiftClick(this)" 
+                            onmouseenter="handleGiftHover(this)"
+                            onmouseleave="handleGiftLeave(this)">
+                        </tgs-player>
                         <div class="info"><pre>${item.id}</pre></div>
                         <div class="info">Ціна: ⭐${item.price}</div>
                         ${item.upgrade_price !== null ? `<div class="info">Ціна оновлення: ⭐${item.upgrade_price}</div>` : ''}
@@ -68,38 +98,7 @@
                     `;
                     gallery.appendChild(div);
                     
-                    let touchStartY = 0;
-                    let isTouchMove = false;
-                    
                     const player = div.querySelector('tgs-player');
-                    
-                    const handleClick = () => {
-                        if (data_active_gift.has(player.id)) {
-                            player.stop();
-                            data_active_gift.delete(player.id);
-                        } else if (isElementVisible(player)) {
-                            player.play();
-                            data_active_gift.add(player.id);
-                        }
-                    };
-
-                    if (!('ontouchstart' in window)) {
-                        player.addEventListener('mouseenter', () => {
-                            if (isElementVisible(player)) {
-                                player.play();
-                            }
-                        });
-                        
-                        player.addEventListener('mouseleave', () => {
-                            if (!data_active_gift.has(player.id)) {
-                                player.stop();
-                            }
-                        });
-                    } else {
-                        player.addEventListener('touchstart', handleClick);
-                    };
-
-                    player.addEventListener('click', handleClick);
                     player.addEventListener('complete', () => {
                         data_active_gift.delete(player.id);
                     });
