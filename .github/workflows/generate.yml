@@ -12,6 +12,7 @@ jobs:
     env:
       # Define environment variable that your script will use
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      OUTPUT_DIR: "/tmp/gifts"
 
     steps:
       - uses: actions/checkout@v4
