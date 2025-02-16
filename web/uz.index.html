@@ -96,24 +96,36 @@
                             }
                         });
                     } else {
+                        let touchStartX = 0;
+                        let touchStartY = 0;
+                        let touchStartTime = 0;
+                        let isTouchMove = false;
+
                         player.addEventListener('touchstart', (e) => {
+                            touchStartX = e.touches[0].clientX;
                             touchStartY = e.touches[0].clientY;
+                            touchStartTime = Date.now();
                             isTouchMove = false;
                         }, { passive: true });
 
                         player.addEventListener('touchmove', (e) => {
+                            const touchMoveX = e.touches[0].clientX;
                             const touchMoveY = e.touches[0].clientY;
-                            if (Math.abs(touchMoveY - touchStartY) > 10) {
+                            const deltaX = Math.abs(touchMoveX - touchStartX);
+                            const deltaY = Math.abs(touchMoveY - touchStartY);
+                            if (deltaX > 10 || deltaY > 10) {
                                 isTouchMove = true;
                             }
                         }, { passive: true });
 
-                        player.addEventListener('touchend', () => {
-                            if (!isTouchMove && isElementVisible(player)) {
+                        player.addEventListener('touchend', (e) => {
+                            const touchEndTime = Date.now();
+                            const touchDuration = touchEndTime - touchStartTime;
+                            if (!isTouchMove && touchDuration < 700 && isElementVisible(player)) {
                                 handleClick();
                             }
                         });
-                    }
+                    };
                     
                     player.addEventListener('click', handleClick);
                     player.addEventListener('complete', () => {
