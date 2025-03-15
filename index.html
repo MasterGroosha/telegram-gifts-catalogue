@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Gifts</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/tgs-player.js"></script>
+</head>
+<body>
+<header>Telegram Gifts</header>
+<div class="headersub">
+    This is a list of gifts, which Telegram bots can send to users.
+    The number below each image is gift ID.
+</div>
+<div class="headersub">Last updated: 2025-03-15 17:35 UTC</div>
+<div class="gallery" id="gallery"></div>
+
+<script>
+    const data_active_gift = {};
+
+    function load_gift_start() {
+        fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            const gallery = document.getElementById('gallery');
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'item';
+                div.innerHTML = `
+                        <tgs-player autoplay mode="normal" style="width: 180px; height: 180px" src="images/${item.id}.tgs" onclick="ClickGift(this);" onmouseover="ClickGift(this);" id="${item.id}"></tgs-player>
+                        <div class="info"><pre>${item.id}</pre></div>
+                        <div class="info">Price: ⭐${item.price}</div>
+                        ${item.upgrade_price !== null ? `<div class="info">Upgrade Price: ⭐${item.upgrade_price}</div>` : ''}
+                        ${item.remaining_count !== null ? `<div class="info">Remaining: ${item.remaining_count}</div>` : ''}
+                        ${item.total_count !== null ? `<div class="info">Total: ${item.total_count}</div>` : ''}
+                    `;
+                gallery.appendChild(div);
+            });
+        })
+        .catch(error => console.error('Error loading data:', error));
+    }
+
+    function ClickGift(element) {
+        if (element.id in data_active_gift) { return; }
+        data_active_gift[element.id] = true;
+
+        element.stop();
+        element.play();
+
+        element.addEventListener('complete', (event) => {
+            delete data_active_gift[event.target.id]
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        load_gift_start();
+    });
+</script>
+</body>
+</html>
